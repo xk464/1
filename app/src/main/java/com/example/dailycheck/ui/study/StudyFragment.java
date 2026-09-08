@@ -1,7 +1,10 @@
 package com.example.dailycheck.ui.study;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -55,7 +59,12 @@ public class StudyFragment extends Fragment {
         @Override
         public void run() {
             updateTimerDisplay();
-            timerHandler.postDelayed(this, 500); // 每 500ms 更新一次
+            // 每 1 秒更新一次通知（不要每 500ms，节省电量）
+            long ms = getElapsedMs();
+            if (ms % 1000 < 600) {
+                TimerNotificationHelper.show(requireContext(), ms, true);
+            }
+            timerHandler.postDelayed(this, 500);
         }
     };
 
@@ -124,16 +133,21 @@ public class StudyFragment extends Fragment {
     // ==================== 计时功能 ====================
 
     private void startOrResumeTimer() {
+        // Android 13+ 需要运行时通知权限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 2001);
+            }
+        }
         int state = timerSP.getInt(KEY_STATE, STATE_IDLE);
         SharedPreferences.Editor ed = timerSP.edit();
         long now = System.currentTimeMillis();
 
         if (state == STATE_IDLE) {
-            // 全新开始
             ed.putLong(KEY_START_TIME, now);
             ed.putLong(KEY_ACCUM_MS, 0L);
         } else if (state == STATE_PAUSED) {
-            // 从暂停恢复：start_time 设为 now，accum_ms 保持不变
             long accum = timerSP.getLong(KEY_ACCUM_MS, 0L);
             ed.putLong(KEY_START_TIME, now);
             ed.putLong(KEY_ACCUM_MS, accum);
@@ -141,10 +155,10 @@ public class StudyFragment extends Fragment {
         ed.putInt(KEY_STATE, STATE_RUNNING).apply();
         updateTimerUI();
         timerHandler.post(timerTick);
+        TimerNotificationHelper.show(requireContext(), getElapsedMs(), true);
     }
 
     private void pauseTimer() {
-        // 保存当前累计时间
         long accum = getElapsedMs();
         timerSP.edit()
                 .putInt(KEY_STATE, STATE_PAUSED)
@@ -153,13 +167,14 @@ public class StudyFragment extends Fragment {
         timerHandler.removeCallbacks(timerTick);
         updateTimerUI();
         updateTimerDisplay();
+        TimerNotificationHelper.show(requireContext(), accum, false);
     }
 
     private void stopTimerAndSave() {
         long elapsedMs = getElapsedMs();
-        // 先重置计时状态，避免保存失败导致卡死
         timerSP.edit().clear().apply();
         timerHandler.removeCallbacks(timerTick);
+        TimerNotificationHelper.cancel(requireContext());
         updateTimerDisplay();
         updateTimerUI();
 
@@ -167,8 +182,23 @@ public class StudyFragment extends Fragment {
             Toast.makeText(requireContext(), "计时太短，未保存", Toast.LENGTH_SHORT).show();
             return;
         }
-        int minutes = (int) ((elapsedMs + 59999) / 60000); // 向上取整到分钟
+        int minutes = (int) ((elapsedMs + 59999) / 60000);
         showSaveDialog(minutes);
+    }
+
+    /** 应用/界面重新打开时恢复计时状态 */
+    private void restoreTimerState() {
+        int state = timerSP.getInt(KEY_STATE, STATE_IDLE);
+        updateTimerDisplay();
+        updateTimerUI();
+        if (state == STATE_RUNNING) {
+            timerHandler.post(timerTick);
+            TimerNotificationHelper.show(requireContext(), getElapsedMs(), true);
+        } else if (state == STATE_PAUSED) {
+            TimerNotificationHelper.show(requireContext(), getElapsedMs(), false);
+        } else {
+            TimerNotificationHelper.cancel(requireContext());
+        }
     }
 
     /** 当前已累计毫秒数（统一用这个方法计算，避免 now 不一致） */
@@ -180,16 +210,6 @@ public class StudyFragment extends Fragment {
             accum += System.currentTimeMillis() - start;
         }
         return Math.max(0L, accum);
-    }
-
-    /** 应用/界面重新打开时恢复计时状态 */
-    private void restoreTimerState() {
-        int state = timerSP.getInt(KEY_STATE, STATE_IDLE);
-        updateTimerDisplay();
-        updateTimerUI();
-        if (state == STATE_RUNNING) {
-            timerHandler.post(timerTick);
-        }
     }
 
     private void updateTimerDisplay() {
