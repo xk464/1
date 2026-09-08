@@ -62,6 +62,93 @@
             android:textColor="@color/primary" />
     </com.google.android.material.card.MaterialCardView>
 
+    <!-- 计时卡片 -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_timer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="@color/card_bg"
+        app:layout_constraintTop_toBottomOf="@id/card_total"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="学习计时"
+                android:textSize="13sp"
+                android:textColor="@color/text_secondary" />
+
+            <TextView
+                android:id="@+id/tv_timer_display"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="00:00:00"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                android:fontFamily="monospace"
+                android:textColor="@color/primary"
+                android:layout_marginVertical="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_timer_start"
+                    style="@style/Widget.MaterialComponents.Button"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:text="开始"
+                    android:textSize="14sp"
+                    app:cornerRadius="10dp"
+                    android:layout_marginEnd="6dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_timer_pause"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:text="暂停"
+                    android:textSize="14sp"
+                    app:cornerRadius="10dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginEnd="3dp"
+                    android:enabled="false" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_timer_stop"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:text="保存"
+                    android:textSize="14sp"
+                    app:cornerRadius="10dp"
+                    android:layout_marginStart="6dp"
+                    app:strokeColor="@color/expense_red"
+                    android:textColor="@color/expense_red"
+                    android:enabled="false" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_study"
         android:layout_width="0dp"
@@ -69,7 +156,7 @@
         android:clipToPadding="false"
         android:paddingTop="8dp"
         android:paddingBottom="88dp"
-        app:layout_constraintTop_toBottomOf="@id/card_total"
+        app:layout_constraintTop_toBottomOf="@id/card_timer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
