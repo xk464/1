@@ -7,7 +7,6 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.dailycheck.databinding.ActivityMainBinding;
@@ -20,7 +19,6 @@ import com.example.dailycheck.notify.NotifyHelper;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    private AppBarConfiguration appBarConfiguration;
     private NavController navController;
 
     @Override
@@ -29,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // 使用 Navigation 组件管理底部导航
         // 通过 NavHostFragment 获取 NavController（FragmentContainerView 的推荐方式）
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_fragment);
@@ -39,17 +36,8 @@ public class MainActivity extends AppCompatActivity {
             Log.e("MainActivity", "NavHostFragment not found, cannot setup navigation");
             return;
         }
-        // 顶层目的地不显示返回箭头
-        appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_tasks,
-                R.id.navigation_study,
-                R.id.navigation_expense,
-                R.id.navigation_stats,
-                R.id.navigation_calendar,
-                R.id.navigation_settings
-        ).build();
 
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        // 仅将底部导航与 NavController 绑定（主题为 NoActionBar，无需 setupActionBarWithNavController）
         NavigationUI.setupWithNavController(binding.bottomNav, navController);
 
         handleOpenTabIntent(getIntent());
@@ -70,12 +58,5 @@ public class MainActivity extends AppCompatActivity {
         if (tab == NotifyHelper.TAB_TASKS) {
             navController.navigate(R.id.navigation_tasks);
         }
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        if (navController == null) return false;
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
     }
 }
