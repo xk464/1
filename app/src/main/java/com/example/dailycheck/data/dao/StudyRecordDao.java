@@ -43,4 +43,14 @@ public interface StudyRecordDao {
         public String subject;
         public int total;
     }
+
+    /** 按日期分组统计学习时长 */
+    @Query("SELECT date, COALESCE(SUM(durationMinutes), 0) AS total FROM study_records WHERE date BETWEEN :startDate AND :endDate GROUP BY date ORDER BY date ASC")
+    List<DailyTotal> getDailyTotals(String startDate, String endDate);
+
+    /** 每日学习时长统计结果 */
+    class DailyTotal {
+        public String date;
+        public int total;
+    }
 }

@@ -160,6 +160,19 @@ public final class DateUtils {
         return cells;
     }
 
+    /** 获取某周的日期网格（7 天，周一到周日） */
+    public static List<CalendarCell> buildWeekCells(String anyDate) {
+        List<CalendarCell> cells = new ArrayList<>();
+        String[] range = weekRange(anyDate);
+        String today = today();
+        String cursor = range[0];
+        for (int i = 0; i < 7; i++) {
+            cells.add(new CalendarCell(cursor, cursor.equals(today), false));
+            cursor = plusDays(cursor, 1);
+        }
+        return cells;
+    }
+
     /** 日期拆分结果（month 为 0-11） */
     public static class DateParts {
         public final int year, month, day;
@@ -178,6 +191,8 @@ public final class DateUtils {
         public boolean hasData;   // 当天是否有打卡数据
         public int taskTotal;     // 当天任务总数
         public int taskDone;     // 当天已完成任务数
+        public int studyMinutes;  // 当天学习时长（分钟）
+        public double expenseAmount; // 当天支出金额
 
         public CalendarCell(String date, boolean isToday, boolean hasData) {
             this.date = date;

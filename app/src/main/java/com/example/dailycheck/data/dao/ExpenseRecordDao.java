@@ -47,4 +47,14 @@ public interface ExpenseRecordDao {
         public String category;
         public double total;
     }
+
+    /** 按日期分组统计支出 */
+    @Query("SELECT date, COALESCE(SUM(amount), 0) AS total FROM expense_records WHERE type = 0 AND date BETWEEN :startDate AND :endDate GROUP BY date ORDER BY date ASC")
+    List<DailyTotal> getDailyExpense(String startDate, String endDate);
+
+    /** 每日支出统计结果 */
+    class DailyTotal {
+        public String date;
+        public double total;
+    }
 }

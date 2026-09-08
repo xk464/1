@@ -15,8 +15,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.dailycheck.R;
 import com.example.dailycheck.data.AppDatabase;
+import com.example.dailycheck.data.dao.ExpenseRecordDao;
+import com.example.dailycheck.data.dao.StudyRecordDao;
 import com.example.dailycheck.data.dao.TaskDao;
+import com.example.dailycheck.data.entity.ExpenseRecord;
+import com.example.dailycheck.data.entity.StudyRecord;
 import com.example.dailycheck.data.entity.Task;
+import com.example.dailycheck.databinding.DialogAddExpenseBinding;
+import com.example.dailycheck.databinding.DialogAddStudyBinding;
 import com.example.dailycheck.databinding.DialogAddTaskBinding;
 import com.example.dailycheck.databinding.FragmentTasksBinding;
 import com.example.dailycheck.util.DateUtils;
@@ -33,6 +39,8 @@ public class TasksFragment extends Fragment {
     private FragmentTasksBinding binding;
     private AppDatabase db;
     private TaskDao taskDao;
+    private StudyRecordDao studyDao;
+    private ExpenseRecordDao expenseDao;
     private TaskAdapter adapter;
 
     private String selectedDate;
@@ -43,6 +51,8 @@ public class TasksFragment extends Fragment {
         try {
             db = AppDatabase.getInstance(requireContext());
             taskDao = db.taskDao();
+            studyDao = db.studyRecordDao();
+            expenseDao = db.expenseRecordDao();
             selectedDate = DateUtils.today();
         } catch (Exception e) {
             com.example.dailycheck.util.ErrorLogger.get(requireContext()).log("taskFragmentCreate", e);
@@ -98,6 +108,10 @@ public class TasksFragment extends Fragment {
         binding.btnNextDay.setOnClickListener(v -> changeDay(1));
 
         binding.fabAdd.setOnClickListener(v -> showAddTaskDialog());
+
+        // 快捷记录学习/消费
+        binding.cardQuickStudy.setOnClickListener(v -> showQuickStudyDialog());
+        binding.cardQuickExpense.setOnClickListener(v -> showQuickExpenseDialog());
     }
 
     @Override
@@ -173,9 +187,113 @@ public class TasksFragment extends Fragment {
             int percent = total == 0 ? 0 : (int) (completed * 100f / total);
             binding.progress.setMax(100);
             binding.progress.setProgress(percent);
+
+            // 快捷入口今日数据
+            if (studyDao != null) {
+                int studyMin = studyDao.getTotalMinutes(selectedDate, selectedDate);
+                binding.tvQuickStudy.setText(String.format(java.util.Locale.CHINA,
+                        "今日 %d 分钟", studyMin));
+            }
+            if (expenseDao != null) {
+                double expense = expenseDao.getTotalExpense(selectedDate, selectedDate);
+                binding.tvQuickExpense.setText(String.format(java.util.Locale.CHINA,
+                        "今日支出 %.0f", expense));
+            }
         } catch (Exception e) {
             com.example.dailycheck.util.ErrorLogger.get(requireContext()).log("taskRefreshStats", e);
         }
+    }
+
+    /** 快捷添加学习记录 */
+    private void showQuickStudyDialog() {
+        DialogAddStudyBinding d = DialogAddStudyBinding.inflate(LayoutInflater.from(requireContext()));
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("记录学习（" + selectedDate + "）")
+                .setView(d.getRoot())
+                .setPositiveButton("保存", (dialog, which) -> {
+                    String subject = d.etSubject.getText().toString().trim();
+                    String content = d.etContent.getText().toString().trim();
+                    String durStr = d.etDuration.getText().toString().trim();
+                    if (subject.isEmpty()) {
+                        Toast.makeText(requireContext(), "请填写科目", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (durStr.isEmpty()) {
+                        Toast.makeText(requireContext(), "请填写时长", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    int duration;
+                    try {
+                        duration = Integer.parseInt(durStr);
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(requireContext(), "时长无效", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    StudyRecord record = new StudyRecord(subject, content, duration, selectedDate);
+                    new Thread(() -> {
+                        try {
+                            studyDao.insert(record);
+                            requireActivity().runOnUiThread(() -> {
+                                refreshStats();
+                                Toast.makeText(requireContext(),
+                                        "已记录：" + subject + " " + duration + "分钟",
+                                        Toast.LENGTH_SHORT).show();
+                            });
+                        } catch (Exception e) {
+                            com.example.dailycheck.util.ErrorLogger.get(requireContext())
+                                    .log("quickStudyInsert", e);
+                        }
+                    }).start();
+                })
+                .setNegativeButton("取消", null)
+                .show();
+    }
+
+    /** 快捷添加消费记录 */
+    private void showQuickExpenseDialog() {
+        DialogAddExpenseBinding d = DialogAddExpenseBinding.inflate(LayoutInflater.from(requireContext()));
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("记一笔账（" + selectedDate + "）")
+                .setView(d.getRoot())
+                .setPositiveButton("保存", (dialog, which) -> {
+                    String category = d.etCategory.getText().toString().trim();
+                    String amountStr = d.etAmount.getText().toString().trim();
+                    String note = d.etNote.getText().toString().trim();
+                    if (category.isEmpty()) {
+                        Toast.makeText(requireContext(), "请填写分类", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (amountStr.isEmpty()) {
+                        Toast.makeText(requireContext(), "请填写金额", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    double amount;
+                    try {
+                        amount = Double.parseDouble(amountStr);
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(requireContext(), "金额无效", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    int type = d.rbExpense.isChecked()
+                            ? ExpenseRecord.TYPE_EXPENSE : ExpenseRecord.TYPE_INCOME;
+                    ExpenseRecord record = new ExpenseRecord(type, category, amount, note, selectedDate);
+                    new Thread(() -> {
+                        try {
+                            expenseDao.insert(record);
+                            requireActivity().runOnUiThread(() -> {
+                                refreshStats();
+                                Toast.makeText(requireContext(),
+                                        "已记录：" + category + " " + amount + "元",
+                                        Toast.LENGTH_SHORT).show();
+                            });
+                        } catch (Exception e) {
+                            com.example.dailycheck.util.ErrorLogger.get(requireContext())
+                                    .log("quickExpenseInsert", e);
+                        }
+                    }).start();
+                })
+                .setNegativeButton("取消", null)
+                .show();
     }
 
     @Override

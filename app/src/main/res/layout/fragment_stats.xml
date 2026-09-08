@@ -12,29 +12,34 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- 周/月切换 -->
-        <RadioGroup
-            android:id="@+id/rg_period"
+        <!-- 模式切换：周历 / 月历 / 饼图 -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_mode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            app:tabMode="fixed"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="@color/primary"
+            app:tabSelectedTextColor="@color/primary"
+            app:tabTextColor="@color/text_secondary">
 
-            <RadioButton
-                android:id="@+id/rb_week"
-                android:layout_width="0dp"
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:checked="true"
-                android:text="本周" />
+                android:text="周历" />
 
-            <RadioButton
-                android:id="@+id/rb_month"
-                android:layout_width="0dp"
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="本月" />
-        </RadioGroup>
+                android:text="月历" />
 
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="饼图" />
+        </com.google.android.material.tabs.TabLayout>
+
+        <!-- 当前范围 -->
         <TextView
             android:id="@+id/tv_range"
             android:layout_width="match_parent"
@@ -45,7 +50,7 @@
             android:textSize="13sp"
             tools:ignore="HardcodedText" />
 
-        <!-- 三个统计卡片 -->
+        <!-- 三张统计卡片 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -163,11 +168,167 @@
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
-        <!-- 学习时长柱状图 -->
+        <!-- 周历视图 -->
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_week_cal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:visibility="gone"
+            app:cardCornerRadius="16dp"
+            app:cardBackgroundColor="@color/card_bg"
+            app:cardElevation="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="本周打卡概览"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold"
+                    android:textSize="15sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_week_cal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 月历视图 -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_month_cal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            app:cardCornerRadius="16dp"
+            app:cardBackgroundColor="@color/card_bg"
+            app:cardElevation="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="4dp">
+
+                    <Button
+                        android:id="@+id/btn_prev_month"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="上月"
+                        android:minWidth="56dp"
+                        style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+                    <TextView
+                        android:id="@+id/tv_month_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary" />
+
+                    <Button
+                        android:id="@+id/btn_next_month"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="下月"
+                        android:minWidth="56dp"
+                        style="@style/Widget.MaterialComponents.Button.TextButton" />
+                </LinearLayout>
+
+                <!-- 星期表头 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center"
+                        android:text="一" android:textSize="11sp" android:textColor="@color/text_hint"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center"
+                        android:text="二" android:textSize="11sp" android:textColor="@color/text_hint"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center"
+                        android:text="三" android:textSize="11sp" android:textColor="@color/text_hint"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center"
+                        android:text="四" android:textSize="11sp" android:textColor="@color/text_hint"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center"
+                        android:text="五" android:textSize="11sp" android:textColor="@color/text_hint"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center"
+                        android:text="六" android:textSize="11sp" android:textColor="@color/text_hint"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:gravity="center"
+                        android:text="日" android:textSize="11sp" android:textColor="@color/text_hint"/>
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_month_cal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 饼图视图 -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_pie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            app:cardCornerRadius="16dp"
+            app:cardBackgroundColor="@color/card_bg"
+            app:cardElevation="1dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="各科目学习时长占比"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold"
+                    android:textSize="15sp" />
+
+                <com.example.dailycheck.widget.PieChartView
+                    android:id="@+id/pie_study"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:layout_marginTop="12dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- 柱状图（周历/月历模式显示） -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
             app:cardCornerRadius="16dp"
             app:cardBackgroundColor="@color/card_bg"
             app:cardElevation="1dp">
@@ -205,6 +366,7 @@
 
         <!-- 支出分类明细 -->
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_expense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -225,6 +387,12 @@
                     android:textColor="@color/text_primary"
                     android:textStyle="bold"
                     android:textSize="15sp" />
+
+                <com.example.dailycheck.widget.PieChartView
+                    android:id="@+id/pie_expense"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:layout_marginTop="12dp" />
 
                 <LinearLayout
                     android:id="@+id/ll_expense_breakdown"
