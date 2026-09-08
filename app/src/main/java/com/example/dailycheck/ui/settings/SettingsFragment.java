@@ -119,9 +119,6 @@ public class SettingsFragment extends Fragment {
         binding.btnBroadcast.setOnClickListener(v -> broadcast());
         binding.btnListen.setOnClickListener(v -> startListening());
 
-        // 退出登录
-        binding.btnLogout.setOnClickListener(v -> showLogoutDialog());
-
         refreshUi();
     }
 
@@ -331,30 +328,6 @@ public class SettingsFragment extends Fragment {
                 })
                 .setNegativeButton("忽略", null)
                 .show();
-    }
-
-    // ---- 退出登录 ----
-
-    private void showLogoutDialog() {
-        new AlertDialog.Builder(requireContext())
-                .setTitle("退出登录")
-                .setMessage("确定要退出当前账号吗？")
-                .setPositiveButton("退出", (d, w) -> logout())
-                .setNegativeButton("取消", null)
-                .show();
-    }
-
-    private void logout() {
-        // 清除登录状态
-        requireContext().getSharedPreferences("daily_check_login", android.content.Context.MODE_PRIVATE)
-                .edit()
-                .putBoolean("logged_in", false)
-                .apply();
-        // 跳转到登录页
-        Intent intent = new Intent(requireContext(), com.example.dailycheck.LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        requireActivity().finish();
     }
 
     @Override
