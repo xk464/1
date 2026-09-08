@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+  记账 Tab 视图
+  - 顶部：日期导航
+  - 当日收入/支出/结余卡片
+  - 新增收支记录表单
+  - 收支记录列表
+-->
+<VBox spacing="18" styleClass="page-root" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.dailycheck.controllers.ExpenseController">
+
+    <!-- 顶部标题栏 -->
+    <HBox alignment="CENTER_LEFT" spacing="14">
+        <Label text="收支记账" styleClass="page-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="‹ 前一天" onAction="#onPrevDay" styleClass="ghost-btn"/>
+        <Label fx:id="dateLabel" styleClass="date-chip"/>
+        <Button text="后一天 ›" onAction="#onNextDay" styleClass="ghost-btn"/>
+        <Button text="今天" onAction="#onToday" styleClass="ghost-btn"/>
+    </HBox>
+
+    <!-- 当日结余卡片 -->
+    <HBox spacing="14">
+        <VBox styleClass="card" spacing="6" prefWidth="200">
+            <Label text="今日收入" styleClass="card-title"/>
+            <Label fx:id="incomeLabel" text="¥0.00" styleClass="stat-big, income-color"/>
+        </VBox>
+        <VBox styleClass="card" spacing="6" prefWidth="200">
+            <Label text="今日支出" styleClass="card-title"/>
+            <Label fx:id="expenseLabel" text="¥0.00" styleClass="stat-big, expense-color"/>
+        </VBox>
+        <VBox styleClass="card" spacing="6" prefWidth="200">
+            <Label text="今日结余" styleClass="card-title"/>
+            <Label fx:id="balanceLabel" text="¥0.00" styleClass="stat-big"/>
+        </VBox>
+        <VBox styleClass="card" spacing="6" HBox.hgrow="ALWAYS">
+            <Label text="消费上限提示" styleClass="card-title"/>
+            <Label fx:id="limitHintLabel" text="未设置上限" styleClass="card-hint"/>
+        </VBox>
+    </HBox>
+
+    <!-- 新增记录表单 -->
+    <VBox styleClass="card" spacing="12">
+        <Label text="新增记录" styleClass="card-title"/>
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="类型:" styleClass="field-label"/>
+            <RadioButton fx:id="expenseRadio" text="支出" selected="true" styleClass="radio-item"/>
+            <RadioButton fx:id="incomeRadio" text="收入" styleClass="radio-item"/>
+            <Label text="分类:" styleClass="field-label"/>
+            <TextField fx:id="categoryField" promptText="如：餐饮、交通" styleClass="text-field" prefWidth="160"/>
+            <Label text="金额:" styleClass="field-label"/>
+            <TextField fx:id="amountField" promptText="0.00" styleClass="text-field" prefWidth="120"/>
+            <Label text="备注:" styleClass="field-label"/>
+            <TextField fx:id="noteField" promptText="可选" styleClass="text-field" HBox.hgrow="ALWAYS"/>
+            <Button text="添加" onAction="#onAddRecord" styleClass="primary-btn"/>
+        </HBox>
+    </VBox>
+
+    <!-- 记录列表 -->
+    <VBox styleClass="card" spacing="8" VBox.vgrow="ALWAYS">
+        <HBox alignment="CENTER_LEFT" spacing="8">
+            <Label text="收支明细" styleClass="card-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="recordCountLabel" text="共 0 条" styleClass="card-hint"/>
+        </HBox>
+        <Separator/>
+        <ScrollPane fitToWidth="true" styleClass="task-scroll" VBox.vgrow="ALWAYS">
+            <VBox fx:id="recordList" spacing="10" styleClass="task-list"/>
+        </ScrollPane>
+    </VBox>
+</VBox>

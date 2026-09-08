@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<!--
+  打卡 Tab 视图
+  - 顶部：日期导航（前一天 / 后一天 / 今日）、当前日期、添加任务
+  - 连续打卡卡片
+  - 任务列表（VBox 动态填充）
+-->
+<VBox spacing="18" styleClass="page-root" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.dailycheck.controllers.TasksController">
+
+    <!-- 顶部标题栏 -->
+    <HBox alignment="CENTER_LEFT" spacing="14">
+        <Label text="每日打卡" styleClass="page-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="‹ 前一天" onAction="#onPrevDay" styleClass="ghost-btn"/>
+        <Label fx:id="dateLabel" styleClass="date-chip"/>
+        <Button text="后一天 ›" onAction="#onNextDay" styleClass="ghost-btn"/>
+        <Button text="今天" onAction="#onToday" styleClass="ghost-btn"/>
+        <Button text="+ 新增任务" onAction="#onAddTask" styleClass="primary-btn"/>
+    </HBox>
+
+    <!-- 连续打卡 + 今日完成进度卡片 -->
+    <HBox spacing="14">
+        <VBox styleClass="card" spacing="6" prefWidth="220">
+            <Label text="连续打卡" styleClass="card-title"/>
+            <HBox alignment="BASELINE_LEFT" spacing="6">
+                <Label fx:id="streakLabel" text="0" styleClass="stat-big"/>
+                <Label text="天" styleClass="stat-unit"/>
+            </HBox>
+            <Label fx:id="streakHint" text="坚持就是胜利" styleClass="card-hint"/>
+        </VBox>
+
+        <VBox styleClass="card" spacing="6" HBox.hgrow="ALWAYS">
+            <Label text="今日进度" styleClass="card-title"/>
+            <HBox alignment="BASELINE_LEFT" spacing="6">
+                <Label fx:id="progressLabel" text="0 / 0" styleClass="stat-mid"/>
+                <Label text="已完成" styleClass="stat-unit"/>
+            </HBox>
+            <ProgressBar fx:id="progressBar" prefWidth="320" prefHeight="10" progress="0.0" styleClass="progress"/>
+            <Label fx:id="progressHint" text="今天还没有任务，点击右上角新增" styleClass="card-hint"/>
+        </VBox>
+    </HBox>
+
+    <!-- 任务列表 -->
+    <VBox styleClass="card" spacing="8" VBox.vgrow="ALWAYS">
+        <HBox alignment="CENTER_LEFT" spacing="8">
+            <Label text="任务清单" styleClass="card-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="taskCountLabel" text="共 0 项" styleClass="card-hint"/>
+        </HBox>
+        <Separator/>
+        <ScrollPane fitToWidth="true" styleClass="task-scroll" VBox.vgrow="ALWAYS">
+            <VBox fx:id="taskList" spacing="10" styleClass="task-list"/>
+        </ScrollPane>
+    </VBox>
+</VBox>

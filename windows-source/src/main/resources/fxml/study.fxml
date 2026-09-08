@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+  学习 Tab 视图
+  - 顶部：日期导航
+  - 计时卡片：开始/暂停/重置/保存，科目选择 + 内容输入
+  - 学习记录列表
+-->
+<VBox spacing="18" styleClass="page-root" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.dailycheck.controllers.StudyController">
+
+    <!-- 顶部标题栏 -->
+    <HBox alignment="CENTER_LEFT" spacing="14">
+        <Label text="学习记录" styleClass="page-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="‹ 前一天" onAction="#onPrevDay" styleClass="ghost-btn"/>
+        <Label fx:id="dateLabel" styleClass="date-chip"/>
+        <Button text="后一天 ›" onAction="#onNextDay" styleClass="ghost-btn"/>
+        <Button text="今天" onAction="#onToday" styleClass="ghost-btn"/>
+    </HBox>
+
+    <!-- 今日学习汇总 -->
+    <HBox spacing="14">
+        <VBox styleClass="card" spacing="6" prefWidth="220">
+            <Label text="今日学习" styleClass="card-title"/>
+            <HBox alignment="BASELINE_LEFT" spacing="6">
+                <Label fx:id="totalLabel" text="0" styleClass="stat-big"/>
+                <Label text="分钟" styleClass="stat-unit"/>
+            </HBox>
+            <Label fx:id="goalHintLabel" text="未设置目标" styleClass="card-hint"/>
+        </VBox>
+
+        <!-- 计时器卡片 -->
+        <VBox styleClass="card, timer-card" spacing="14" HBox.hgrow="ALWAYS">
+            <Label text="学习计时器" styleClass="card-title"/>
+            <HBox alignment="CENTER_LEFT" spacing="14">
+                <Label fx:id="timerLabel" text="00:00:00" styleClass="timer-display"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="startBtn" text="开始" onAction="#onToggleTimer" styleClass="primary-btn"/>
+                <Button text="重置" onAction="#onResetTimer" styleClass="ghost-btn"/>
+            </HBox>
+            <Separator/>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="科目:" styleClass="field-label"/>
+                <TextField fx:id="subjectField" promptText="如：英语、数学" styleClass="text-field" prefWidth="160"/>
+                <Label text="时长(分):" styleClass="field-label"/>
+                <TextField fx:id="durationField" promptText="如：30" styleClass="text-field" prefWidth="90"/>
+                <Button text="保存记录" onAction="#onSaveRecord" styleClass="primary-btn"/>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="内容:" styleClass="field-label"/>
+                <TextField fx:id="contentField" promptText="如：背单词 50 个" styleClass="text-field" HBox.hgrow="ALWAYS"/>
+            </HBox>
+        </VBox>
+    </HBox>
+
+    <!-- 学习记录列表 -->
+    <VBox styleClass="card" spacing="8" VBox.vgrow="ALWAYS">
+        <HBox alignment="CENTER_LEFT" spacing="8">
+            <Label text="学习记录" styleClass="card-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="recordCountLabel" text="共 0 条" styleClass="card-hint"/>
+        </HBox>
+        <Separator/>
+        <ScrollPane fitToWidth="true" styleClass="task-scroll" VBox.vgrow="ALWAYS">
+            <VBox fx:id="recordList" spacing="10" styleClass="task-list"/>
+        </ScrollPane>
+    </VBox>
+</VBox>

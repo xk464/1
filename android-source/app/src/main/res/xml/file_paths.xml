@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- filesDir 下全部可分享（含 backups/ 与 error_log.txt） -->
+    <files-path name="files" path="." />
+    <cache-path name="cache" path="." />
+    <external-files-path name="external_backups" path="backups/" />
+</paths>

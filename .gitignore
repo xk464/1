@@ -1,10 +1,20 @@
 *.iml
 .gradle
-/local.properties
-/.idea
+local.properties
+.idea
 .DS_Store
-/build
-/captures
+captures
 .externalNativeBuild
 .cxx
-/app/build
+
+# Android build
+android-source/build/
+android-source/app/build/
+
+# Windows build
+windows-source/target/
+windows-source/.mvn/
+
+# Old artifacts
+/build
+/apk

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+  设置 Tab 视图
+  - 每日学习目标
+  - 每日消费上限
+  - 提醒开关 + 提醒时间
+  - 数据存储位置说明
+-->
+<VBox spacing="18" styleClass="page-root" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.dailycheck.controllers.SettingsController">
+
+    <!-- 顶部标题栏 -->
+    <HBox alignment="CENTER_LEFT" spacing="14">
+        <Label text="应用设置" styleClass="page-title"/>
+    </HBox>
+
+    <!-- 每日学习目标 -->
+    <VBox styleClass="card" spacing="14">
+        <Label text="每日学习目标" styleClass="card-title"/>
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="目标时长：" styleClass="field-label"/>
+            <TextField fx:id="studyGoalField" promptText="0 表示不设置" styleClass="text-field" prefWidth="120"/>
+            <Label text="分钟" styleClass="stat-unit"/>
+            <Button text="保存" onAction="#onSaveStudyGoal" styleClass="primary-btn"/>
+        </HBox>
+        <Label text="在「学习」页与「统计」页中会基于此目标提示今日进度。"
+               styleClass="card-hint"/>
+    </VBox>
+
+    <!-- 每日消费上限 -->
+    <VBox styleClass="card" spacing="14">
+        <Label text="每日消费上限" styleClass="card-title"/>
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="每日上限：" styleClass="field-label"/>
+            <TextField fx:id="expenseLimitField" promptText="0 表示不设置" styleClass="text-field" prefWidth="120"/>
+            <Label text="元" styleClass="stat-unit"/>
+            <Button text="保存" onAction="#onSaveExpenseLimit" styleClass="primary-btn"/>
+        </HBox>
+        <Label text="在「记账」页会显示当日支出是否超出上限。"
+               styleClass="card-hint"/>
+    </VBox>
+
+    <!-- 提醒设置（仅保存配置） -->
+    <VBox styleClass="card" spacing="14">
+        <Label text="打卡提醒" styleClass="card-title"/>
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="启用提醒：" styleClass="field-label"/>
+            <CheckBox fx:id="reminderCheck"/>
+        </HBox>
+        <HBox alignment="CENTER_LEFT" spacing="10">
+            <Label text="提醒时间：" styleClass="field-label"/>
+            <Spinner fx:id="hourSpinner" editable="true" prefWidth="80"/>
+            <Label text="时" styleClass="stat-unit"/>
+            <Spinner fx:id="minSpinner" editable="true" prefWidth="80"/>
+            <Label text="分" styleClass="stat-unit"/>
+            <Button text="保存" onAction="#onSaveReminder" styleClass="primary-btn"/>
+        </HBox>
+        <Label text="提示：桌面版仅保存提醒时间配置，不强制后台提醒。"
+               styleClass="card-hint"/>
+    </VBox>
+
+    <!-- 数据存储位置 -->
+    <VBox styleClass="card" spacing="14">
+        <Label text="数据存储" styleClass="card-title"/>
+        <Label fx:id="dbPathLabel" text="（数据库路径）" styleClass="card-hint" wrapText="true"/>
+        <Label text="所有打卡、学习、记账记录均保存在本地 SQLite 数据库文件中，可手动备份。"
+               styleClass="card-hint"/>
+    </VBox>
+
+    <!-- 关于 -->
+    <VBox styleClass="card" spacing="10">
+        <Label text="关于" styleClass="card-title"/>
+        <Label text="每日打卡 DailyCheck 1.0.0" styleClass="card-hint"/>
+        <Label text="JavaFX 桌面版 · 移植自 Android 端" styleClass="card-hint"/>
+    </VBox>
+
+    <Region VBox.vgrow="ALWAYS"/>
+</VBox>

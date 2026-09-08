@@ -1,0 +1,344 @@
+/*
+ * DailyCheck 桌面版样式表
+ * 现代扁平风格，主色 #5B6CFF，页面背景 #F5F6F8，卡片白色圆角带阴影。
+ */
+
+/* ====== 根布局 ====== */
+.page-root {
+    -fx-background-color: #F5F6F8;
+    -fx-padding: 22 28 22 28;
+}
+
+/* ====== 标题 ====== */
+.page-title {
+    -fx-font-size: 22;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2A2E45;
+}
+
+/* ====== 按钮 ====== */
+.button {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-font-size: 13;
+    -fx-padding: 8 16 8 16;
+    -fx-cursor: hand;
+}
+
+.primary-btn {
+    -fx-background-color: #5B6CFF;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 18 8 18;
+}
+
+.primary-btn:hover {
+    -fx-background-color: #4A5AE8;
+}
+
+.primary-btn:armed {
+    -fx-background-color: #3D48C8;
+}
+
+.ghost-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #5B6CFF;
+    -fx-border-color: #C9CEEE;
+    -fx-border-width: 1;
+}
+
+.ghost-btn:hover {
+    -fx-background-color: #EEF0FF;
+}
+
+.danger-btn {
+    -fx-background-color: #FFEBEE;
+    -fx-text-fill: #E53935;
+    -fx-border-color: #FFCDD2;
+    -fx-border-width: 1;
+}
+
+.danger-btn:hover {
+    -fx-background-color: #FFCDD2;
+}
+
+/* ====== 卡片 ====== */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: transparent;
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(gaussian, rgba(45, 50, 80, 0.06), 8, 0, 0, 2);
+    -fx-padding: 16 18 16 18;
+}
+
+.card-title {
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+    -fx-text-fill: #3A3F5C;
+}
+
+.card-hint {
+    -fx-font-size: 12;
+    -fx-text-fill: #9AA0B5;
+}
+
+/* ====== 统计数字 ====== */
+.stat-big {
+    -fx-font-size: 28;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2A2E45;
+}
+
+.stat-mid {
+    -fx-font-size: 22;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2A2E45;
+}
+
+.stat-unit {
+    -fx-font-size: 13;
+    -fx-text-fill: #9AA0B5;
+}
+
+.income-color {
+    -fx-text-fill: #4CAF89 !important;
+}
+
+.expense-color {
+    -fx-text-fill: #FF6B81 !important;
+}
+
+/* ====== 进度条 ====== */
+.progress > .track {
+    -fx-background-color: #E9EAF2;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+}
+
+.progress > .bar {
+    -fx-background-color: #5B6CFF;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+}
+
+/* ====== 日期 chip ====== */
+.date-chip {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-border-color: #E0E2EB;
+    -fx-border-radius: 16;
+    -fx-padding: 6 14 6 14;
+    -fx-text-fill: #3A3F5C;
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
+}
+
+/* ====== 输入框 ====== */
+.text-field {
+    -fx-background-color: #F7F8FB;
+    -fx-background-radius: 8;
+    -fx-border-color: #E0E2EB;
+    -fx-border-radius: 8;
+    -fx-padding: 8 10 8 10;
+    -fx-font-size: 13;
+    -fx-text-fill: #2A2E45;
+}
+
+.text-field:focused {
+    -fx-border-color: #5B6CFF;
+    -fx-background-color: white;
+}
+
+.field-label {
+    -fx-font-size: 13;
+    -fx-text-fill: #5A6275;
+}
+
+/* ====== 单选 / 复选 ====== */
+.radio-item {
+    -fx-text-fill: #3A3F5C;
+    -fx-font-size: 13;
+}
+
+.radio-item .radio {
+    -fx-fill: #5B6CFF;
+}
+
+.check-box .box {
+    -fx-background-color: white;
+    -fx-border-color: #C9CEEE;
+    -fx-border-radius: 4;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #5B6CFF;
+    -fx-border-color: #5B6CFF;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: white;
+}
+
+/* ====== 列表区滚动条 ====== */
+.task-scroll {
+    -fx-background-color: transparent;
+}
+
+.task-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+.task-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.task-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: #D4D7E6;
+    -fx-background-radius: 4;
+}
+
+.task-scroll .scroll-bar:vertical .increment-button,
+.task-scroll .scroll-bar:vertical .decrement-button {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+.task-list {
+    -fx-background-color: transparent;
+    -fx-padding: 6 0 6 0;
+}
+
+/* ====== 任务条目 ====== */
+.task-item {
+    -fx-background-color: #FAFBFD;
+    -fx-background-radius: 10;
+    -fx-border-color: #ECEEF3;
+    -fx-border-radius: 10;
+    -fx-padding: 12 14 12 14;
+    -fx-cursor: hand;
+}
+
+.task-item:hover {
+    -fx-background-color: #F2F4FF;
+    -fx-border-color: #C9CEEE;
+}
+
+.task-item:completed {
+    -fx-background-color: #F0FBF3;
+    -fx-border-color: #D4EEDC;
+}
+
+.task-title {
+    -fx-font-size: 14;
+    -fx-text-fill: #2A2E45;
+}
+
+.task-title-done {
+    -fx-text-fill: #9AA0B5;
+    -fx-strikethrough: true;
+}
+
+.task-time {
+    -fx-font-size: 11;
+    -fx-text-fill: #9AA0B5;
+}
+
+/* ====== 复选框（任务完成） ====== */
+.task-check .box {
+    -fx-background-color: white;
+    -fx-border-color: #B5BAD0;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.task-check:selected .box {
+    -fx-background-color: #5B6CFF;
+    -fx-border-color: #5B6CFF;
+}
+
+.task-check:selected .mark {
+    -fx-background-color: white;
+}
+
+/* ====== 学习计时器 ====== */
+.timer-card {
+    -fx-border-color: #E7E9FF;
+    -fx-border-width: 1;
+}
+
+.timer-display {
+    -fx-font-size: 36;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5B6CFF;
+    -fx-font-family: "Consolas", "Menlo", monospace;
+}
+
+/* ====== 周期切换 ====== */
+.period-toggle {
+    -fx-background-color: white;
+    -fx-background-radius: 16;
+    -fx-border-color: #E0E2EB;
+    -fx-border-radius: 16;
+    -fx-text-fill: #5A6275;
+    -fx-padding: 6 16 6 16;
+    -fx-font-size: 13;
+    -fx-cursor: hand;
+}
+
+.period-toggle:selected {
+    -fx-background-color: #5B6CFF;
+    -fx-text-fill: white;
+    -fx-border-color: #5B6CFF;
+}
+
+/* ====== 侧边栏导航项 ====== */
+.nav-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: #5A6275;
+    -fx-font-size: 14;
+    -fx-alignment: CENTER-LEFT;
+    -fx-padding: 10 18 10 22;
+    -fx-background-radius: 10;
+    -fx-border-width: 0;
+    -fx-cursor: hand;
+}
+
+.nav-item:hover {
+    -fx-background-color: #F2F4FF;
+    -fx-text-fill: #5B6CFF;
+}
+
+.nav-item:selected {
+    -fx-background-color: #5B6CFF;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* ====== 分隔线 ====== */
+.separator {
+    -fx-background-color: #ECEEF3;
+}
+
+/* ====== 删除小按钮 ====== */
+.icon-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #B5BAD0;
+    -fx-padding: 4 8 4 8;
+    -fx-font-size: 12;
+    -fx-cursor: hand;
+}
+
+.icon-btn:hover {
+    -fx-text-fill: #E53935;
+}
+
+/* ====== 表格区滚动条（横向） ====== */
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-padding: 0;
+}
+
+.scroll-bar .thumb {
+    -fx-background-radius: 4;
+}

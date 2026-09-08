@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.dailycheck.charts.SimpleBarChart?>
+<?import com.dailycheck.charts.SimplePieChart?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+  统计 Tab 视图
+  - 顶部：周期切换（本周 / 本月）
+  - 概览卡片（任务完成率、学习时长、支出金额、收入金额）
+  - 学习时长柱状图（按科目）
+  - 支出占比饼图（按分类）
+-->
+<VBox spacing="18" styleClass="page-root" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.dailycheck.controllers.StatsController">
+
+    <!-- 顶部标题栏 -->
+    <HBox alignment="CENTER_LEFT" spacing="14">
+        <Label text="数据统计" styleClass="page-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <ToggleButton fx:id="weekToggle" text="本周" onAction="#onToggleWeek" styleClass="period-toggle"/>
+        <ToggleButton fx:id="monthToggle" text="本月" onAction="#onToggleMonth" selected="true" styleClass="period-toggle"/>
+        <Label fx:id="rangeLabel" styleClass="date-chip"/>
+    </HBox>
+
+    <!-- 概览卡片 -->
+    <HBox spacing="14">
+        <VBox styleClass="card" spacing="6" prefWidth="220">
+            <Label text="任务完成率" styleClass="card-title"/>
+            <HBox alignment="BASELINE_LEFT" spacing="6">
+                <Label fx:id="taskRateLabel" text="0%" styleClass="stat-big"/>
+            </HBox>
+            <Label fx:id="taskCountSummary" text="0 / 0" styleClass="card-hint"/>
+        </VBox>
+        <VBox styleClass="card" spacing="6" prefWidth="220">
+            <Label text="学习时长" styleClass="card-title"/>
+            <HBox alignment="BASELINE_LEFT" spacing="6">
+                <Label fx:id="studyTotalLabel" text="0" styleClass="stat-big"/>
+                <Label text="分钟" styleClass="stat-unit"/>
+            </HBox>
+            <Label fx:id="studyAvgLabel" text="日均 0 分钟" styleClass="card-hint"/>
+        </VBox>
+        <VBox styleClass="card" spacing="6" prefWidth="220">
+            <Label text="支出金额" styleClass="card-title"/>
+            <HBox alignment="BASELINE_LEFT" spacing="6">
+                <Label fx:id="expenseTotalLabel" text="¥0.00" styleClass="stat-big, expense-color"/>
+            </HBox>
+            <Label fx:id="expenseAvgLabel" text="日均 ¥0.00" styleClass="card-hint"/>
+        </VBox>
+        <VBox styleClass="card" spacing="6" prefWidth="220">
+            <Label text="收入金额" styleClass="card-title"/>
+            <HBox alignment="BASELINE_LEFT" spacing="6">
+                <Label fx:id="incomeTotalLabel" text="¥0.00" styleClass="stat-big, income-color"/>
+            </HBox>
+            <Label fx:id="balanceSummary" text="结余 ¥0.00" styleClass="card-hint"/>
+        </VBox>
+    </HBox>
+
+    <!-- 图表区 -->
+    <HBox spacing="14" VBox.vgrow="ALWAYS">
+        <VBox styleClass="card" spacing="8" HBox.hgrow="ALWAYS">
+            <Label text="学习时长分布（按科目）" styleClass="card-title"/>
+            <Separator/>
+            <SimpleBarChart fx:id="barChart" managed="true" VBox.vgrow="ALWAYS"/>
+        </VBox>
+        <VBox styleClass="card" spacing="8" HBox.hgrow="ALWAYS">
+            <Label text="支出占比（按分类）" styleClass="card-title"/>
+            <Separator/>
+            <SimplePieChart fx:id="pieChart" managed="true" VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </HBox>
+</VBox>
