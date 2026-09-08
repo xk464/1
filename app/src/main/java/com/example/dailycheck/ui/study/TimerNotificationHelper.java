@@ -41,8 +41,8 @@ public final class TimerNotificationHelper {
         nm.createNotificationChannel(channel);
     }
 
-    /** 显示/更新通知 */
-    public static void show(Context context, long elapsedMs, boolean running) {
+    /** 显示/更新通知（带目标分钟，0 表示无目标） */
+    public static void show(Context context, long elapsedMs, boolean running, int goalMinutes) {
         ensureChannel(context);
 
         // 点击通知回到主界面（暂不精确跳转到学习 Tab，后续可扩展）
@@ -57,13 +57,26 @@ public final class TimerNotificationHelper {
 
         String timeText = formatMs(elapsedMs);
         String title = running ? "学习计时中" : "学习计时（已暂停）";
+        String content = timeText;
+        String bigText = "已累计学习 " + timeText;
+
+        // 目标进度信息
+        if (goalMinutes > 0) {
+            long goalMs = goalMinutes * 60_000L;
+            int progress = (int) Math.min(100L, elapsedMs * 100L / goalMs);
+            boolean reached = elapsedMs >= goalMs;
+            content = timeText + " · " + progress + "%";
+            bigText = "已累计学习 " + timeText
+                    + (reached ? "（目标已达成）" : " · 目标 " + goalMinutes + " 分钟 " + progress + "%");
+        }
+
         int color = running ? 0xFF5B6CFF : 0xFF9A9A9A; // primary / gray
 
         NotificationCompat.Builder b = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_study)
                 .setContentTitle(title)
-                .setContentText(timeText)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText("已累计学习 " + timeText))
+                .setContentText(content)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(bigText))
                 .setOngoing(true)                    // 常驻通知，不可手动划掉
                 .setContentIntent(pi)
                 .setOnlyAlertOnce(true)              // 只在首次显示时提示，后续更新不再发声

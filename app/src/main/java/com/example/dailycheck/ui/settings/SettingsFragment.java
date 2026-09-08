@@ -95,6 +95,10 @@ public class SettingsFragment extends Fragment {
         // 提醒时间
         binding.rowReminderTime.setOnClickListener(v -> showTimePicker());
 
+        // 每日目标
+        binding.rowStudyGoal.setOnClickListener(v -> showStudyGoalPicker());
+        binding.rowExpenseLimit.setOnClickListener(v -> showExpenseLimitPicker());
+
         // 数据导出
         binding.rowExport.setOnClickListener(v -> exportBackup());
 
@@ -134,6 +138,14 @@ public class SettingsFragment extends Fragment {
         binding.swReminder.setChecked(prefs.isReminderEnabled());
         binding.tvReminderTime.setText(String.format(java.util.Locale.CHINA,
                 "%02d:%02d", prefs.getReminderHour(), prefs.getReminderMin()));
+
+        // 每日目标
+        int studyGoal = prefs.getDailyStudyGoal();
+        binding.tvStudyGoal.setText(studyGoal > 0
+                ? studyGoal + " 分钟" : "未设置");
+        float expenseLimit = prefs.getDailyExpenseLimit();
+        binding.tvExpenseLimit.setText(expenseLimit > 0
+                ? String.format(java.util.Locale.CHINA, "%.2f 元", expenseLimit) : "未设置");
     }
 
     /** 夜间模式三选一对话框 */
@@ -161,6 +173,56 @@ public class SettingsFragment extends Fragment {
             refreshUi();
             Toast.makeText(requireContext(), "提醒时间已更新", Toast.LENGTH_SHORT).show();
         }, prefs.getReminderHour(), prefs.getReminderMin(), true).show();
+    }
+
+    /** 每日学习目标选择 */
+    private void showStudyGoalPicker() {
+        String[] labels = {"未设置", "30 分钟", "60 分钟", "90 分钟", "120 分钟", "180 分钟", "240 分钟"};
+        final int[] values = {0, 30, 60, 90, 120, 180, 240};
+        int current = prefs.getDailyStudyGoal();
+        int checked = 0;
+        for (int i = 0; i < values.length; i++) {
+            if (values[i] == current) { checked = i; break; }
+        }
+        new AlertDialog.Builder(requireContext())
+                .setTitle("每日学习目标")
+                .setSingleChoiceItems(labels, checked, (d, which) -> {
+                    prefs.setDailyStudyGoal(values[which]);
+                    refreshUi();
+                    d.dismiss();
+                })
+                .setNegativeButton("取消", null)
+                .show();
+    }
+
+    /** 每日消费上限输入 */
+    private void showExpenseLimitPicker() {
+        final android.widget.EditText et = new android.widget.EditText(requireContext());
+        et.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        et.setHint("如 100.00");
+        float current = prefs.getDailyExpenseLimit();
+        if (current > 0) et.setText(String.valueOf(current));
+        new AlertDialog.Builder(requireContext())
+                .setTitle("每日消费上限")
+                .setMessage("设置后，记账页将显示剩余额度（上限 - 实际消费）")
+                .setView(et)
+                .setPositiveButton("保存", (d, w) -> {
+                    String s = et.getText().toString().trim();
+                    if (s.isEmpty()) {
+                        prefs.setDailyExpenseLimit(0);
+                    } else {
+                        try {
+                            prefs.setDailyExpenseLimit(Float.parseFloat(s));
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(requireContext(), "金额无效", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+                    refreshUi();
+                    Toast.makeText(requireContext(), "已更新", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("取消", null)
+                .show();
     }
 
     private void ensureNotifPermission() {

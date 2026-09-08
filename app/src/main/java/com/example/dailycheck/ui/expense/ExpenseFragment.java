@@ -148,6 +148,25 @@ public class ExpenseFragment extends Fragment {
                 ? getResources().getColor(R.color.income_green, null)
                 : getResources().getColor(R.color.expense_red, null);
         binding.tvBalance.setTextColor(color);
+
+        // 消费上限进度
+        float limit = com.example.dailycheck.util.PrefsManager.get(requireContext())
+                .getDailyExpenseLimit();
+        if (limit > 0) {
+            binding.llLimit.setVisibility(View.VISIBLE);
+            double remaining = limit - expense;
+            int progress = (int) Math.min(100L, (long) (expense * 100f / limit));
+            binding.pbLimit.setProgress(progress);
+            binding.tvLimitRemaining.setText(String.format(Locale.CHINA,
+                    "剩余 %.2f / 上限 %.2f", remaining, limit));
+            // 超限标红，正常标绿
+            binding.tvLimitRemaining.setTextColor(
+                    remaining < 0
+                            ? getResources().getColor(R.color.expense_red, null)
+                            : getResources().getColor(R.color.income_green, null));
+        } else {
+            binding.llLimit.setVisibility(View.GONE);
+        }
     }
 
     @Override

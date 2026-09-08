@@ -16,6 +16,8 @@ public class PrefsManager {
     private static final String KEY_REMINDER_ENABLED = "reminder_enabled";
     private static final String KEY_REMINDER_HOUR = "reminder_hour";
     private static final String KEY_REMINDER_MIN = "reminder_min";
+    private static final String KEY_DAILY_STUDY_GOAL = "daily_study_goal_min"; // 每日学习目标（分钟），0=未设置
+    private static final String KEY_DAILY_EXPENSE_LIMIT = "daily_expense_limit"; // 每日消费上限（元），0=未设置
 
     /** 夜间模式可选项的稳定索引，便于在设置页三选一对话框中定位 */
     public static final int NIGHT_INDEX_SYSTEM = 0;
@@ -99,5 +101,25 @@ public class PrefsManager {
         sp.edit().putInt(KEY_REMINDER_HOUR, hour)
                 .putInt(KEY_REMINDER_MIN, min)
                 .apply();
+    }
+
+    // ==================== 每日目标 ====================
+
+    /** 每日学习目标（分钟），0 表示未设置 */
+    public int getDailyStudyGoal() {
+        return sp.getInt(KEY_DAILY_STUDY_GOAL, 0);
+    }
+
+    public void setDailyStudyGoal(int minutes) {
+        sp.edit().putInt(KEY_DAILY_STUDY_GOAL, Math.max(0, minutes)).apply();
+    }
+
+    /** 每日消费上限（元），0 表示未设置 */
+    public float getDailyExpenseLimit() {
+        return sp.getFloat(KEY_DAILY_EXPENSE_LIMIT, 0f);
+    }
+
+    public void setDailyExpenseLimit(float limit) {
+        sp.edit().putFloat(KEY_DAILY_EXPENSE_LIMIT, Math.max(0f, limit)).apply();
     }
 }
