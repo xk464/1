@@ -2,10 +2,11 @@ package com.example.dailycheck;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -29,7 +30,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         // 使用 Navigation 组件管理底部导航
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        // 通过 NavHostFragment 获取 NavController（FragmentContainerView 的推荐方式）
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment);
+        if (navHostFragment != null) {
+            navController = navHostFragment.getNavController();
+        } else {
+            Log.e("MainActivity", "NavHostFragment not found, cannot setup navigation");
+            return;
+        }
         // 顶层目的地不显示返回箭头
         appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_tasks,
@@ -55,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
     /** 解析通知传入的 extra，自动切换到指定 Tab */
     private void handleOpenTabIntent(Intent intent) {
-        if (intent == null || !intent.hasExtra(NotifyHelper.EXTRA_OPEN_TAB)) return;
+        if (intent == null || navController == null) return;
+        if (!intent.hasExtra(NotifyHelper.EXTRA_OPEN_TAB)) return;
         int tab = intent.getIntExtra(NotifyHelper.EXTRA_OPEN_TAB, NotifyHelper.TAB_TASKS);
         if (tab == NotifyHelper.TAB_TASKS) {
             navController.navigate(R.id.navigation_tasks);
@@ -64,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
+        if (navController == null) return false;
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }

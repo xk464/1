@@ -40,9 +40,13 @@ public class TasksFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        db = AppDatabase.getInstance(requireContext());
-        taskDao = db.taskDao();
-        selectedDate = DateUtils.today();
+        try {
+            db = AppDatabase.getInstance(requireContext());
+            taskDao = db.taskDao();
+            selectedDate = DateUtils.today();
+        } catch (Exception e) {
+            com.example.dailycheck.util.ErrorLogger.get(requireContext()).log("taskFragmentCreate", e);
+        }
     }
 
     @Nullable
@@ -141,27 +145,37 @@ public class TasksFragment extends Fragment {
     }
 
     private void loadData() {
-        binding.tvDate.setText(selectedDate + " " + DateUtils.weekdayChinese(selectedDate));
-        List<Task> tasks = taskDao.getTasksByDate(selectedDate);
-        adapter.submit(tasks);
-        binding.tvEmpty.setVisibility(tasks.isEmpty() ? View.VISIBLE : View.GONE);
-        refreshStats();
+        if (taskDao == null || binding == null) return;
+        try {
+            binding.tvDate.setText(selectedDate + " " + DateUtils.weekdayChinese(selectedDate));
+            List<Task> tasks = taskDao.getTasksByDate(selectedDate);
+            adapter.submit(tasks);
+            binding.tvEmpty.setVisibility(tasks.isEmpty() ? View.VISIBLE : View.GONE);
+            refreshStats();
+        } catch (Exception e) {
+            com.example.dailycheck.util.ErrorLogger.get(requireContext()).log("taskLoadData", e);
+        }
     }
 
     private void refreshStats() {
-        int total = taskDao.getTotalCount(selectedDate);
-        int completed = taskDao.getCompletedCount(selectedDate);
-        binding.tvProgress.setText(completed + " / " + total);
+        if (taskDao == null || binding == null) return;
+        try {
+            int total = taskDao.getTotalCount(selectedDate);
+            int completed = taskDao.getCompletedCount(selectedDate);
+            binding.tvProgress.setText(completed + " / " + total);
 
-        // 连续打卡天数：基于已完成记录的日期列表
-        List<String> completedDates = taskDao.getCompletedDates();
-        int streak = DateUtils.calculateStreak(completedDates);
-        binding.tvStreak.setText(String.format(java.util.Locale.CHINA, "连续打卡 %d 天", streak));
+            // 连续打卡天数：基于已完成记录的日期列表
+            List<String> completedDates = taskDao.getCompletedDates();
+            int streak = DateUtils.calculateStreak(completedDates);
+            binding.tvStreak.setText(String.format(java.util.Locale.CHINA, "连续打卡 %d 天", streak));
 
-        // 进度条
-        int percent = total == 0 ? 0 : (int) (completed * 100f / total);
-        binding.progress.setMax(100);
-        binding.progress.setProgress(percent);
+            // 进度条
+            int percent = total == 0 ? 0 : (int) (completed * 100f / total);
+            binding.progress.setMax(100);
+            binding.progress.setProgress(percent);
+        } catch (Exception e) {
+            com.example.dailycheck.util.ErrorLogger.get(requireContext()).log("taskRefreshStats", e);
+        }
     }
 
     @Override
