@@ -32,6 +32,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".CrashDisplayActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DailyCheck.Crash" />
+
         <!-- 文件分享（备份导出用） -->
         <provider
             android:name="androidx.core.content.FileProvider"
