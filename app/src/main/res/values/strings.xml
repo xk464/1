@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">每日打卡</string>
+    <string name="title_tasks">打卡</string>
+    <string name="title_study">学习</string>
+    <string name="title_expense">记账</string>
+    <string name="title_stats">统计</string>
+    <string name="title_calendar">日历</string>
+    <string name="title_settings">设置</string>
+
+    <!-- 空状态文案 -->
+    <string name="empty_tasks">今天还没有任务，点击右下角添加吧</string>
+    <string name="empty_study">当天还没有学习记录</string>
+    <string name="empty_expense">当天还没有收支记录</string>
+    <string name="empty_stats">暂无统计数据</string>
+    <string name="empty_calendar">本月暂无打卡记录</string>
+    <string name="empty_templates">暂无可用模板</string>
+
+    <!-- 操作通用文案 -->
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="delete">删除</string>
+    <string name="add">添加</string>
+    <string name="save">保存</string>
+</resources>
