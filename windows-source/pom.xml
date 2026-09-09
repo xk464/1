@@ -89,7 +89,18 @@
                                         <exclude>META-INF/*.SF</exclude>
                                         <exclude>META-INF/*.DSA</exclude>
                                         <exclude>META-INF/*.RSA</exclude>
+                                        <!-- Exclude module-info to avoid JPMS conflicts in uber jar -->
                                         <exclude>module-info.class</exclude>
+                                        <exclude>META-INF/versions/9/module-info.class</exclude>
+                                        <exclude>META-INF/versions/*/module-info.class</exclude>
+                                        <!-- Exclude Linux/Mac native libs (keep Windows .dll only) -->
+                                        <exclude>lib*.so</exclude>
+                                        <exclude>lib*.dylib</exclude>
+                                        <exclude>org/sqlite/native/Linux/**</exclude>
+                                        <exclude>org/sqlite/native/Linux-Android/**</exclude>
+                                        <exclude>org/sqlite/native/Linux-Musl/**</exclude>
+                                        <exclude>org/sqlite/native/Mac/**</exclude>
+                                        <exclude>org/sqlite/native/FreeBSD/**</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
@@ -128,9 +139,11 @@
                     <outfile>${project.build.directory}/DailyCheck.exe</outfile>
                     <errTitle>DailyCheck</errTitle>
                     <downloadUrl>https://adoptium.net/</downloadUrl>
+                    <stayAlive>true</stayAlive>
+                    <restartOnCrash>false</restartOnCrash>
                     <jre>
-                        <minVersion>17.0.0</minVersion>
-                        <maxVersion>25.0.99</maxVersion>
+                        <minVersion>17</minVersion>
+                        <jdkPreference>preferJre</jdkPreference>
                     </jre>
                     <classPath>
                         <mainClass>${main.class}</mainClass>
