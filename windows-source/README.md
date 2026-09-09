@@ -8,7 +8,7 @@
 - JavaFX 17.0.2
 - SQLite 3.45.1.0 (sqlite-jdbc)
 - Maven 构建
-- jpackage 打包为 EXE
+- Launch4j 打包为 EXE（支持跨平台编译）
 
 ## 项目结构
 
@@ -44,12 +44,16 @@ src/main/resources/
 # 运行（需 JDK 17+）
 mvn javafx:run
 
-# 打包 JAR
-mvn package -DskipTests -Djpackage.skip=true
+# 打包 JAR（仅 jar，跳过 EXE）
+mvn package -DskipTests -Dlaunch4j.skip=true
 
-# 构建 EXE（Windows 环境）
+# 构建 EXE（任何平台，Launch4j 支持跨平台编译）
 mvn package
 ```
+
+构建产物：
+- `target/dailycheck-windows.jar` — 阴影化（shade）的运行时 JAR
+- `target/DailyCheck.exe` — Windows 可执行文件（需用户机器装有 Java 17+）
 
 ## 数据存储
 

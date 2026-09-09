@@ -19,7 +19,6 @@
         <javafx.version>17.0.2</javafx.version>
         <sqlite.version>3.45.1.0</sqlite.version>
         <main.class>com.dailycheck.Main</main.class>
-        <jpackage.skip>false</jpackage.skip>
     </properties>
 
     <dependencies>
@@ -109,34 +108,43 @@
                 </configuration>
             </plugin>
 
-            <!-- jpackage-maven-plugin: produce a Windows EXE installer -->
+            <!-- Launch4j: wrap the shaded jar into a Windows EXE (cross-compilable on Linux/macOS) -->
             <plugin>
-                <groupId>org.panteleyev</groupId>
-                <artifactId>jpackage-maven-plugin</artifactId>
-                <version>1.6.5</version>
-                <configuration>
-                    <name>DailyCheck</name>
-                    <appVersion>1.0.0</appVersion>
-                    <vendor>com.dailycheck</vendor>
-                    <mainClass>${main.class}</mainClass>
-                    <mainJar>${project.build.finalName}.jar</mainJar>
-                    <input>${project.build.directory}</input>
-                    <destination>${project.build.directory}/jpackage</destination>
-                    <type>EXE</type>
-                    <skip>${jpackage.skip}</skip>
-                    <javaOptions>
-                        <option>-Dfile.encoding=UTF-8</option>
-                    </javaOptions>
-                </configuration>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>2.5.3</version>
                 <executions>
                     <execution>
-                        <id>build-exe</id>
+                        <id>wrap-exe</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>jpackage</goal>
+                            <goal>launch4j</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <headerType>gui</headerType>
+                    <jar>${project.build.directory}/${project.build.finalName}.jar</jar>
+                    <outfile>${project.build.directory}/DailyCheck.exe</outfile>
+                    <errTitle>DailyCheck</errTitle>
+                    <downloadUrl>https://adoptium.net/</downloadUrl>
+                    <jre>
+                        <minVersion>17.0.0</minVersion>
+                        <maxVersion>25.0.99</maxVersion>
+                    </jre>
+                    <classPath>
+                        <mainClass>${main.class}</mainClass>
+                    </classPath>
+                    <versionInfo>
+                        <fileVersion>1.0.0.0</fileVersion>
+                        <txtFileVersion>1.0.0</txtFileVersion>
+                        <fileDescription>DailyCheck - Daily check-in app for Windows</fileDescription>
+                        <copyright>Copyright (c) 2026 DailyCheck</copyright>
+                        <productName>DailyCheck</productName>
+                        <productVersion>1.0.0.0</productVersion>
+                        <txtProductVersion>1.0.0</txtProductVersion>
+                    </versionInfo>
+                </configuration>
             </plugin>
         </plugins>
     </build>
